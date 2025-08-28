@@ -1,6 +1,9 @@
 package worldimage.watchme.utils
 
+import worldimage.watchme.data.remote.dto.CategoryDto
+import worldimage.watchme.data.remote.dto.Genre
 import worldimage.watchme.data.remote.dto.MovieDto
+import worldimage.watchme.domain.model.Category
 import worldimage.watchme.domain.model.MovieDetails
 
 fun MovieDto.toMovieDetails(): MovieDetails {
@@ -17,4 +20,15 @@ fun MovieDto.toMovieDetails(): MovieDetails {
         vote_average = this.vote_average ?: 0.0,
         vote_count = this.vote_count ?: 0
     )
+}
+
+fun Genre.toCategory(): Category {
+    return Category(
+        id = this.id,
+        name = this.name
+    )
+}
+
+fun String.toYear(): String {
+    return this.take(4)
 }
