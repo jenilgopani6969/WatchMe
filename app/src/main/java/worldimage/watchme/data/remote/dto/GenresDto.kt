@@ -1,6 +1,6 @@
 package worldimage.watchme.data.remote.dto
 
-data class CategoryDto(
+data class GenresDto(
     val genres: List<Genre>
 )
 

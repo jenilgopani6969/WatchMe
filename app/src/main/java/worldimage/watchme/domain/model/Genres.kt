@@ -1,6 +1,6 @@
 package worldimage.watchme.domain.model
 
-data class Category(
+data class Genres(
     val id: Int = 0,
     val name: String = ""
 )

@@ -77,7 +77,6 @@ dependencies {
     //System UI Controller
     implementation(libs.accompanist.systemuicontroller)
 
-    //dagger-hilt
     //DaggerHilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

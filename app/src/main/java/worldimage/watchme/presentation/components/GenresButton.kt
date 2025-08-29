@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import worldimage.watchme.ui.theme.CategoryBackground
 
 @Composable
-fun CategoryButton(
+fun GenresButton(
     text: String,
     onClick: () -> Unit
 ) {
@@ -47,5 +47,5 @@ fun CategoryButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCustomButton() {
-    CategoryButton(text = "Popular", onClick = {})
+    GenresButton(text = "Popular", onClick = {})
 }

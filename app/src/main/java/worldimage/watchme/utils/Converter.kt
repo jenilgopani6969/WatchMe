@@ -1,9 +1,8 @@
 package worldimage.watchme.utils
 
-import worldimage.watchme.data.remote.dto.CategoryDto
 import worldimage.watchme.data.remote.dto.Genre
 import worldimage.watchme.data.remote.dto.MovieDto
-import worldimage.watchme.domain.model.Category
+import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
 
 fun MovieDto.toMovieDetails(): MovieDetails {
@@ -22,8 +21,8 @@ fun MovieDto.toMovieDetails(): MovieDetails {
     )
 }
 
-fun Genre.toCategory(): Category {
-    return Category(
+fun Genre.toGenres(): Genres {
+    return Genres(
         id = this.id,
         name = this.name
     )

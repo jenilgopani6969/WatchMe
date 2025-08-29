@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException
 import worldimage.watchme.data.remote.MovieApi
-import worldimage.watchme.domain.model.Category
+import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
 import worldimage.watchme.domain.repository.MovieRepository
 import worldimage.watchme.utils.Resource
-import worldimage.watchme.utils.toCategory
+import worldimage.watchme.utils.toGenres
 import worldimage.watchme.utils.toMovieDetails
 import javax.inject.Inject
 
@@ -78,7 +78,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getCategoryList(
         type: String
-    ): Flow<Resource<List<Category>>> {
+    ): Flow<Resource<List<Genres>>> {
         return flow {
             emit(Resource.Loading(true))
             try {
@@ -88,7 +88,7 @@ class MovieRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         data = movieResponse.genres.map { genre ->
-                            genre.toCategory()
+                            genre.toGenres()
                         }
                     ))
             } catch (e: HttpException) {

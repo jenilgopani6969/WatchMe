@@ -1,7 +1,7 @@
 package worldimage.watchme.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import worldimage.watchme.domain.model.Category
+import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
 import worldimage.watchme.utils.Resource
 
@@ -19,5 +19,5 @@ interface MovieRepository{
 
     suspend fun getCategoryList(
         type: String
-    ): Flow<Resource<List<Category>>>
+    ): Flow<Resource<List<Genres>>>
 }

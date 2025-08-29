@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import worldimage.watchme.domain.repository.MovieRepository
+import worldimage.watchme.utils.Constant
 import worldimage.watchme.utils.Resource
 import javax.inject.Inject
 
@@ -17,14 +18,23 @@ class MovieViewModel @Inject constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
-    private var _movieListByCategoryState = MutableStateFlow(MovieListState())
-    val movieListByCategoryState = _movieListByCategoryState.asStateFlow()
+    private var _movieListByPopularState = MutableStateFlow(MovieListByCategoryState())
+    val movieListByPopularState = _movieListByPopularState.asStateFlow()
 
-    private var _movieListByGenresState = MutableStateFlow(MovieListState())
+    private var _movieListByNowPlayingState = MutableStateFlow(MovieListByCategoryState())
+    val movieListByNowPlayingState = _movieListByNowPlayingState.asStateFlow()
+
+    private var _movieListByTopRatedState = MutableStateFlow(MovieListByCategoryState())
+    val movieListByTopRatedState = _movieListByTopRatedState.asStateFlow()
+
+    private var _movieListByUpcomingState = MutableStateFlow(MovieListByCategoryState())
+    val movieListByUpcomingState = _movieListByUpcomingState.asStateFlow()
+
+    private var _movieListByGenresState = MutableStateFlow(MovieListByCategoryState())
     val movieListByGenresState = _movieListByGenresState.asStateFlow()
 
-    private var _categoryState = MutableStateFlow(CategoryState())
-    val categoryState = _categoryState.asStateFlow()
+    private var _genresState = MutableStateFlow(GenresState())
+    val genresState = _genresState.asStateFlow()
 
     fun getMovieListByCategory(
         category: String,
@@ -35,25 +45,36 @@ class MovieViewModel @Inject constructor(
                 category = category,
                 page = page
             ).collectLatest { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        _movieListByCategoryState.update { it.copy(isLoading = resource.isLoading) }
-                    }
 
-                    is Resource.Success -> {
-                        resource.data?.let { movieList ->
-                            _movieListByCategoryState.update { it.copy(movieList = movieList) }
+                // map category to its state flow
+                val stateFlow = when (category) {
+                    Constant.POPULAR -> _movieListByPopularState
+                    Constant.UPCOMING -> _movieListByUpcomingState
+                    Constant.NOW_PLAYING -> _movieListByNowPlayingState
+                    Constant.TOP_RATED -> _movieListByTopRatedState
+                    else -> null
+                }
+
+                stateFlow?.let {
+                    when (resource) {
+                        is Resource.Loading -> {
+                            stateFlow.update { it.copy(isLoading = resource.isLoading) }
                         }
-                    }
 
-                    is Resource.Error -> {
-                        resource.message?.let { errorMessage ->
-                            _movieListByCategoryState.update { it.copy(errorMessage = errorMessage) }
+                        is Resource.Success -> {
+                            resource.data?.let { movieList ->
+                                stateFlow.update { it.copy(movieList = movieList) }
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            resource.message?.let { errorMessage ->
+                                stateFlow.update { it.copy(errorMessage = errorMessage) }
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 
@@ -98,18 +119,18 @@ class MovieViewModel @Inject constructor(
             ).collectLatest { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        _categoryState.update { it.copy(isLoading = resource.isLoading) }
+                        _genresState.update { it.copy(isLoading = resource.isLoading) }
                     }
 
                     is Resource.Success -> {
-                        resource.data?.let { categoryList ->
-                            _categoryState.update { it.copy(categoryList = categoryList) }
+                        resource.data?.let { genresList ->
+                            _genresState.update { it.copy(genresList = genresList) }
                         }
                     }
 
                     is Resource.Error -> {
                         resource.message?.let { errorMessage ->
-                            _categoryState.update { it.copy(errorMessage = errorMessage) }
+                            _genresState.update { it.copy(errorMessage = errorMessage) }
                         }
                     }
                 }
