@@ -1,4 +1,4 @@
-package worldimage.watchme.presentation.movieList
+package worldimage.watchme.presentation.movieList.state
 
 import worldimage.watchme.domain.model.Genres
 

@@ -23,13 +23,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import worldimage.watchme.R
 import worldimage.watchme.data.remote.MovieApi
-import worldimage.watchme.domain.model.MovieDetails
+import worldimage.watchme.domain.model.MovieList
 import worldimage.watchme.ui.theme.CategoryBackground
 import worldimage.watchme.utils.toYear
 
 @Composable
 fun MovieBanner(
-    movieDetails: MovieDetails,
+    movieDetails: MovieList,
     onClick: () -> Unit
 ) {
     Card(
@@ -84,18 +84,11 @@ fun MovieBanner(
 @Composable
 private fun PrevMovieBanner() {
     MovieBanner(
-        movieDetails = MovieDetails(
-            backdrop_path = "/eU7IfdWq8KQy0oNd4kKXS0QUR08.jpg",
+        movieDetails = MovieList(
             id = 1061474,
-            original_language = "en",
-            original_title = "Superman",
-            overview = "Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent.",
-            popularity = 568.5633,
             poster_path = "/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
             release_date = "2025-07-09",
             title = "Superman",
-            vote_average = 7.555,
-            vote_count = 2648
         )
     ) {}
 }

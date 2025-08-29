@@ -7,10 +7,12 @@ import okio.IOException
 import worldimage.watchme.data.remote.MovieApi
 import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
+import worldimage.watchme.domain.model.MovieList
 import worldimage.watchme.domain.repository.MovieRepository
 import worldimage.watchme.utils.Resource
 import worldimage.watchme.utils.toGenres
 import worldimage.watchme.utils.toMovieDetails
+import worldimage.watchme.utils.toMovieList
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -19,7 +21,7 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMoviesByCategory(
         category: String,
         page: Int
-    ): Flow<Resource<List<MovieDetails>>> {
+    ): Flow<Resource<List<MovieList>>> {
         return flow {
             emit(Resource.Loading(true))
             try {
@@ -30,7 +32,7 @@ class MovieRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                     data = movieResponse.results.map { movieDto ->
-                        movieDto.toMovieDetails()
+                        movieDto.toMovieList()
                     }
                 ))
             } catch (e: HttpException) {
@@ -49,7 +51,7 @@ class MovieRepositoryImpl @Inject constructor(
         type: String,
         genresId: String,
         page: Int
-    ): Flow<Resource<List<MovieDetails>>> {
+    ): Flow<Resource<List<MovieList>>> {
         return flow {
             emit(Resource.Loading(true))
             try {
@@ -61,7 +63,7 @@ class MovieRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         data = movieResponse.results.map { movieDto ->
-                            movieDto.toMovieDetails()
+                            movieDto.toMovieList()
                         }
                     ))
             } catch (e: HttpException) {
@@ -90,6 +92,28 @@ class MovieRepositoryImpl @Inject constructor(
                         data = movieResponse.genres.map { genre ->
                             genre.toGenres()
                         }
+                    ))
+            } catch (e: HttpException) {
+                emit(Resource.Error(e.message ?: "Unknown Error!"))
+            } catch (e: IOException) {
+                emit(Resource.Error("Error while connecting to internet!"))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unknown Exception!"))
+            }
+            emit(Resource.Loading(false))
+            return@flow
+        }
+    }
+
+    override suspend fun getMovieDetails(movieId: String): Flow<Resource<MovieDetails>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val movieResponse = movieApi.getMoviesDetails(
+                    movieId = movieId
+                )
+                emit(Resource.Success(
+                    movieResponse.toMovieDetails()
                     ))
             } catch (e: HttpException) {
                 emit(Resource.Error(e.message ?: "Unknown Error!"))
