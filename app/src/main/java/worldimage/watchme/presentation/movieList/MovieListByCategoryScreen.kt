@@ -20,18 +20,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import worldimage.watchme.domain.model.MovieDetails
+import worldimage.watchme.domain.model.MovieList
 import worldimage.watchme.navigation.Screen
+import worldimage.watchme.presentation.MovieViewModel
 import worldimage.watchme.presentation.components.MovieBanner
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MovieListByCategoryScreen(
     modifier: Modifier = Modifier,
-    movieList: List<MovieDetails>,
+    movieList: List<MovieList>,
     isShowTitle: Boolean = false,
     title: String = "",
-    navController: NavController
+    isSellAllVisible: Boolean = true,
+    navController: NavController,
+    isPopBackStack: Boolean = false
 ) {
     val viewModel: MovieViewModel = hiltViewModel()
 
@@ -50,19 +53,21 @@ fun MovieListByCategoryScreen(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clickable(true, onClick = {
-                            println("On Click called!")
-                        }),
-                    text = "See all",
-                    color = Color.White.copy(alpha = 0.5f),
-                    style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontStyle = FontStyle.Italic
-                )
+                if (isSellAllVisible) {
+                    Text(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable(true, onClick = {
+                                println("On Click called!")
+                            }),
+                        text = "See all",
+                        color = Color.White.copy(alpha = 0.5f),
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
             }
         }
         LazyRow(
@@ -76,6 +81,9 @@ fun MovieListByCategoryScreen(
                 MovieBanner(
                     movieDetails = item,
                 ) {
+                    if (isPopBackStack) {
+                        navController.popBackStack()
+                    }
                     navController.navigate(route = Screen.MovieDetails.route + "?movieId=${item.id}")
                 }
             }

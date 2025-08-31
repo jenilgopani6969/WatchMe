@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import worldimage.watchme.domain.model.Genres
+import worldimage.watchme.presentation.MovieViewModel
 import worldimage.watchme.presentation.components.GenresButton
 
 @Composable

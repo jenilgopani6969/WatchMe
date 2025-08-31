@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import worldimage.watchme.data.remote.dto.GenresDto
+import worldimage.watchme.data.remote.dto.MovieDetailsDto
 import worldimage.watchme.data.remote.dto.MovieListDto
 
 interface MovieApi {
@@ -28,6 +29,19 @@ interface MovieApi {
         @Path("type") type: String,
         @Query("api_key") apiKey: String = API_KEY
     ): GenresDto
+
+    @GET("movie/{movie_id}")
+    suspend fun getMoviesDetails(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): MovieDetailsDto
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getRecommendedMovie(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): MovieListDto
+
 
     companion object {
         const val BASE_URL = "https://api.themoviedb.org/3/"

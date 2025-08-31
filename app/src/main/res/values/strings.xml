@@ -4,4 +4,5 @@
     <string name="upcoming">Upcoming</string>
     <string name="now_playing">Now Playing</string>
     <string name="top_rated">Top Rated</string>
+    <string name="recommended_movies">Recommended Movies</string>
 </resources>

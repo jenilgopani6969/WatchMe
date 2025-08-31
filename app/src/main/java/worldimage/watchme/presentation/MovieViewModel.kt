@@ -1,4 +1,4 @@
-package worldimage.watchme.presentation.movieList
+package worldimage.watchme.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import worldimage.watchme.domain.repository.MovieRepository
+import worldimage.watchme.presentation.movieList.state.GenresState
+import worldimage.watchme.presentation.movieList.state.MovieListByCategoryState
+import worldimage.watchme.presentation.moviedetails.MovieDetailScreen
+import worldimage.watchme.presentation.moviedetails.state.MovieDetailsState
 import worldimage.watchme.utils.Constant
 import worldimage.watchme.utils.Resource
 import javax.inject.Inject
@@ -35,6 +39,12 @@ class MovieViewModel @Inject constructor(
 
     private var _genresState = MutableStateFlow(GenresState())
     val genresState = _genresState.asStateFlow()
+
+    private var _movieDetailsState = MutableStateFlow(MovieDetailsState())
+    val movieDetailsState = _movieDetailsState.asStateFlow()
+
+    private var _movieRecommendedMovieState = MutableStateFlow(MovieListByCategoryState())
+    val movieRecommendedMovieState = _movieRecommendedMovieState.asStateFlow()
 
     fun getMovieListByCategory(
         category: String,
@@ -131,6 +141,62 @@ class MovieViewModel @Inject constructor(
                     is Resource.Error -> {
                         resource.message?.let { errorMessage ->
                             _genresState.update { it.copy(errorMessage = errorMessage) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getMovieDetails(
+        movieId: String
+    ) {
+        viewModelScope.launch {
+            movieRepository.getMovieDetails(
+                movieId = movieId
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _movieDetailsState.update { it.copy(isLoading = resource.isLoading) }
+                    }
+
+                    is Resource.Success -> {
+                        resource.data?.let { movieDetails ->
+                            _movieDetailsState.update { it.copy(movieDetails = movieDetails) }
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        resource.message?.let { errorMessage ->
+                            _movieDetailsState.update { it.copy(errorMessage = errorMessage) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getRecommendedMovie(
+        movieId: String
+    ) {
+        viewModelScope.launch {
+            movieRepository.getRecommendedMovie(
+                movieId = movieId
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _movieRecommendedMovieState.update { it.copy(isLoading = resource.isLoading) }
+                    }
+
+                    is Resource.Success -> {
+                        resource.data?.let { movieList ->
+                            _movieRecommendedMovieState.update { it.copy(movieList = movieList) }
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        resource.message?.let { errorMessage ->
+                            _movieRecommendedMovieState.update { it.copy(errorMessage = errorMessage) }
                         }
                     }
                 }

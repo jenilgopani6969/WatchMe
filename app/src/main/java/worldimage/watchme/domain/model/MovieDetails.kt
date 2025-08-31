@@ -1,15 +1,12 @@
 package worldimage.watchme.domain.model
 
+import worldimage.watchme.data.remote.dto.Genre
+
 data class MovieDetails(
-    val backdrop_path: String,
     val id: Int,
-    val original_language: String,
-    val original_title: String,
-    val overview: String,
-    val popularity: Double,
-    val poster_path: String,
-    val release_date: String,
     val title: String,
+    val poster_path: String,
+    val genres: List<Genre>,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
 )
