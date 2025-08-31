@@ -43,6 +43,9 @@ class MovieViewModel @Inject constructor(
     private var _movieDetailsState = MutableStateFlow(MovieDetailsState())
     val movieDetailsState = _movieDetailsState.asStateFlow()
 
+    private var _movieRecommendedMovieState = MutableStateFlow(MovieListByCategoryState())
+    val movieRecommendedMovieState = _movieRecommendedMovieState.asStateFlow()
+
     fun getMovieListByCategory(
         category: String,
         page: Int
@@ -166,6 +169,34 @@ class MovieViewModel @Inject constructor(
                     is Resource.Error -> {
                         resource.message?.let { errorMessage ->
                             _movieDetailsState.update { it.copy(errorMessage = errorMessage) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getRecommendedMovie(
+        movieId: String
+    ) {
+        viewModelScope.launch {
+            movieRepository.getRecommendedMovie(
+                movieId = movieId
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _movieRecommendedMovieState.update { it.copy(isLoading = resource.isLoading) }
+                    }
+
+                    is Resource.Success -> {
+                        resource.data?.let { movieList ->
+                            _movieRecommendedMovieState.update { it.copy(movieList = movieList) }
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        resource.message?.let { errorMessage ->
+                            _movieRecommendedMovieState.update { it.copy(errorMessage = errorMessage) }
                         }
                     }
                 }

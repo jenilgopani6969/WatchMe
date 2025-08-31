@@ -39,43 +39,48 @@ fun MovieBanner(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = onClick,
         shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .width(164.dp)
         ) {
-            Column(
+            val imageUrl = MovieApi.IMAGE_URL + movieDetails.poster_path
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = movieDetails.title + " image",
+                modifier = Modifier.wrapContentWidth(),
+                placeholder = painterResource(R.drawable.placeholder_imageloading),
+                error = painterResource(R.drawable.placeholder_imagenotfound)
+            )
+            Box(
                 modifier = Modifier
-                    .width(164.dp)
+                    .background(CategoryBackground)
+                    .fillMaxWidth()
             ) {
-                val imageUrl = MovieApi.IMAGE_URL + movieDetails.poster_path
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = movieDetails.title + " image",
-                    modifier = Modifier.wrapContentWidth(),
-                    placeholder = painterResource(R.drawable.placeholder_imageloading),
-                    error = painterResource(R.drawable.placeholder_imagenotfound)
-                )
-                Box(
-                    modifier = Modifier
-                        .background(CategoryBackground)
-                        .fillMaxWidth()
+                Column(
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        top = 8.dp,
+                        end = 16.dp,
+                        bottom = 8.dp
+                    )
                 ) {
-                    Column(
-                        modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
-                    ) {
-                        Text(
-                            text = movieDetails.title,
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = movieDetails.release_date.toYear(),
-                            color = Color.White,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
+                    Text(
+                        text = movieDetails.title,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = movieDetails.release_date.toYear(),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelSmall
+                    )
                 }
-
             }
+
+        }
 
     }
 }

@@ -29,7 +29,10 @@ fun NavigationStack() {
                 }
             )
         ) {
-            MovieDetailScreen(movieId = it.arguments?.getString("movieId"))
+            MovieDetailScreen(
+                navController = navController,
+                movieId = it.arguments?.getString("movieId")
+            )
         }
     }
 }

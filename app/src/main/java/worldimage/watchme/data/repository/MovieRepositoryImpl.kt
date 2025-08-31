@@ -126,4 +126,29 @@ class MovieRepositoryImpl @Inject constructor(
             return@flow
         }
     }
+
+    override suspend fun getRecommendedMovie(movieId: String): Flow<Resource<List<MovieList>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val movieResponse = movieApi.getRecommendedMovie(
+                    movieId = movieId
+                )
+                emit(
+                    Resource.Success(
+                        data = movieResponse.results.map { movieDto ->
+                            movieDto.toMovieList()
+                        }
+                    ))
+            } catch (e: HttpException) {
+                emit(Resource.Error(e.message ?: "Unknown Error!"))
+            } catch (e: IOException) {
+                emit(Resource.Error("Error while connecting to internet!"))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unknown Exception!"))
+            }
+            emit(Resource.Loading(false))
+            return@flow
+        }
+    }
 }

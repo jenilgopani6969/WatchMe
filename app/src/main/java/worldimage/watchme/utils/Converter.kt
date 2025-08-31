@@ -20,7 +20,7 @@ fun MovieDetailsDto.toMovieDetails(): MovieDetails {
         id = this.id ?: 0,
         title = this.title ?: "",
         poster_path = this.poster_path ?: "",
-        genres = this.genres ?: emptyList<Genre>(),
+        genres = this.genres ?: emptyList(),
         vote_average = this.vote_average ?: 0.0,
         vote_count = this.vote_count ?: 0
     )
@@ -35,4 +35,11 @@ fun Genre.toGenres(): Genres {
 
 fun String.toYear(): String {
     return this.take(4)
+}
+
+fun Int.formateToSuffix(): String {
+    val withSuffix: String = if (this.toDouble() >= 1000) {
+        (this.toDouble()/1000).toString().take(3) + "k"
+    } else this.toString()
+    return withSuffix
 }

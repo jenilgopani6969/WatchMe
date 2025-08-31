@@ -32,7 +32,9 @@ fun MovieListByCategoryScreen(
     movieList: List<MovieList>,
     isShowTitle: Boolean = false,
     title: String = "",
-    navController: NavController
+    isSellAllVisible: Boolean = true,
+    navController: NavController,
+    isPopBackStack: Boolean = false
 ) {
     val viewModel: MovieViewModel = hiltViewModel()
 
@@ -51,19 +53,21 @@ fun MovieListByCategoryScreen(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clickable(true, onClick = {
-                            println("On Click called!")
-                        }),
-                    text = "See all",
-                    color = Color.White.copy(alpha = 0.5f),
-                    style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontStyle = FontStyle.Italic
-                )
+                if (isSellAllVisible) {
+                    Text(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable(true, onClick = {
+                                println("On Click called!")
+                            }),
+                        text = "See all",
+                        color = Color.White.copy(alpha = 0.5f),
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
             }
         }
         LazyRow(
@@ -77,6 +81,9 @@ fun MovieListByCategoryScreen(
                 MovieBanner(
                     movieDetails = item,
                 ) {
+                    if (isPopBackStack) {
+                        navController.popBackStack()
+                    }
                     navController.navigate(route = Screen.MovieDetails.route + "?movieId=${item.id}")
                 }
             }

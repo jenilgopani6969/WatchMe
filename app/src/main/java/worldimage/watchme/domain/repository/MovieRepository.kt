@@ -25,4 +25,8 @@ interface MovieRepository{
     suspend fun getMovieDetails(
         movieId: String
     ): Flow<Resource<MovieDetails>>
+
+    suspend fun getRecommendedMovie(
+        movieId: String
+    ): Flow<Resource<List<MovieList>>>
 }
