@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import worldimage.watchme.domain.repository.MovieRepository
 import worldimage.watchme.presentation.movieList.state.GenresState
 import worldimage.watchme.presentation.movieList.state.MovieListByCategoryState
-import worldimage.watchme.presentation.moviedetails.MovieDetailScreen
+import worldimage.watchme.presentation.moviedetails.state.CastAndCrewListState
 import worldimage.watchme.presentation.moviedetails.state.MovieDetailsState
 import worldimage.watchme.utils.Constant
 import worldimage.watchme.utils.Resource
@@ -45,6 +45,9 @@ class MovieViewModel @Inject constructor(
 
     private var _movieRecommendedMovieState = MutableStateFlow(MovieListByCategoryState())
     val movieRecommendedMovieState = _movieRecommendedMovieState.asStateFlow()
+
+    private var _castByMovieState = MutableStateFlow(CastAndCrewListState())
+    val castByMovieState = _castByMovieState.asStateFlow()
 
     fun getMovieListByCategory(
         category: String,
@@ -197,6 +200,34 @@ class MovieViewModel @Inject constructor(
                     is Resource.Error -> {
                         resource.message?.let { errorMessage ->
                             _movieRecommendedMovieState.update { it.copy(errorMessage = errorMessage) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getCastAndCrewByMovie(
+        movieId: String
+    ) {
+        viewModelScope.launch {
+            movieRepository.getCastAndCrewByMovie(
+                movieId = movieId
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        _castByMovieState.update { it.copy(isLoading = resource.isLoading) }
+                    }
+
+                    is Resource.Success -> {
+                        resource.data?.let { castList ->
+                            _castByMovieState.update { it.copy(castList = castList) }
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        resource.message?.let { errorMessage ->
+                            _castByMovieState.update { it.copy(errorMessage = errorMessage) }
                         }
                     }
                 }

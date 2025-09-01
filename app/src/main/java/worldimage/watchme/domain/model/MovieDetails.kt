@@ -9,4 +9,8 @@ data class MovieDetails(
     val genres: List<Genre>,
     val vote_average: Double,
     val vote_count: Int,
+    val release_date: String,
+    val overview: String,
+    val runtime: Int,
+    val backdrop_path: String
 )
