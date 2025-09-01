@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException
 import worldimage.watchme.data.remote.MovieApi
+import worldimage.watchme.domain.model.CastDetails
 import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
 import worldimage.watchme.domain.model.MovieList
 import worldimage.watchme.domain.repository.MovieRepository
 import worldimage.watchme.utils.Resource
+import worldimage.watchme.utils.toCastDetails
 import worldimage.watchme.utils.toGenres
 import worldimage.watchme.utils.toMovieDetails
 import worldimage.watchme.utils.toMovieList
@@ -138,6 +140,31 @@ class MovieRepositoryImpl @Inject constructor(
                     Resource.Success(
                         data = movieResponse.results.map { movieDto ->
                             movieDto.toMovieList()
+                        }
+                    ))
+            } catch (e: HttpException) {
+                emit(Resource.Error(e.message ?: "Unknown Error!"))
+            } catch (e: IOException) {
+                emit(Resource.Error("Error while connecting to internet!"))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unknown Exception!"))
+            }
+            emit(Resource.Loading(false))
+            return@flow
+        }
+    }
+
+    override suspend fun getCastAndCrewByMovie(movieId: String): Flow<Resource<List<CastDetails>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val movieResponse = movieApi.getCastAndCrewByMovie(
+                    movieId = movieId
+                )
+                emit(
+                    Resource.Success(
+                        data = movieResponse.cast.map { castDto ->
+                            castDto.toCastDetails()
                         }
                     ))
             } catch (e: HttpException) {

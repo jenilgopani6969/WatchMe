@@ -1,6 +1,7 @@
 package worldimage.watchme.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import worldimage.watchme.domain.model.CastDetails
 import worldimage.watchme.domain.model.Genres
 import worldimage.watchme.domain.model.MovieDetails
 import worldimage.watchme.domain.model.MovieList
@@ -29,4 +30,8 @@ interface MovieRepository{
     suspend fun getRecommendedMovie(
         movieId: String
     ): Flow<Resource<List<MovieList>>>
+
+    suspend fun getCastAndCrewByMovie(
+        movieId: String
+    ): Flow<Resource<List<CastDetails>>>
 }

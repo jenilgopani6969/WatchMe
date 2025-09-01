@@ -3,6 +3,7 @@ package worldimage.watchme.data.remote
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import worldimage.watchme.data.remote.dto.CastListDto
 import worldimage.watchme.data.remote.dto.GenresDto
 import worldimage.watchme.data.remote.dto.MovieDetailsDto
 import worldimage.watchme.data.remote.dto.MovieListDto
@@ -41,6 +42,12 @@ interface MovieApi {
         @Path("movie_id") movieId: String,
         @Query("api_key") apiKey: String = API_KEY
     ): MovieListDto
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getCastAndCrewByMovie(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): CastListDto
 
 
     companion object {

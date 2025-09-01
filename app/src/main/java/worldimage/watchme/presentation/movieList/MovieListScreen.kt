@@ -51,58 +51,57 @@ fun MovieListScreen(
     val genresListState = movieViewModel.genresState.collectAsState().value
 
     Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-        ) {
-            if (genresListState.genresList.isNotEmpty()) {
-                GenresHorizonalList(genresListState.genresList)
-                LaunchedEffect(Unit) {
-                    movieViewModel.getMovieListByGenres(
-                        type = "movie",
-                        genresId = genresListState.genresList.first().id.toString(),
-                        page = 1
-                    )
-                }
-            }
-            if (movieListByGenresState.movieList.isNotEmpty()) {
-                MovieListByCategoryScreen(
-                    movieList = movieListByGenresState.movieList,
-                    navController = navController
-                )
-            }
-            if (movieListByPopularState.movieList.isNotEmpty()) {
-                MovieListByCategoryScreen(
-                    movieList = movieListByPopularState.movieList,
-                    isShowTitle = true,
-                    title = stringResource(R.string.popular),
-                    navController = navController
-                )
-            }
-            if (movieListByTopRatedState.movieList.isNotEmpty()) {
-                MovieListByCategoryScreen(
-                    movieList = movieListByTopRatedState.movieList,
-                    isShowTitle = true,
-                    title = stringResource(R.string.top_rated),
-                    navController = navController
-                )
-            }
-            if (movieListByUpcomingState.movieList.isNotEmpty()) {
-                MovieListByCategoryScreen(
-                    movieList = movieListByUpcomingState.movieList,
-                    isShowTitle = true,
-                    title = stringResource(R.string.upcoming),
-                    navController = navController
-                )
-            }
-            if (movieListByNowPlayingState.movieList.isNotEmpty()) {
-                MovieListByCategoryScreen(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    movieList = movieListByNowPlayingState.movieList,
-                    isShowTitle = true,
-                    title = stringResource(R.string.now_playing),
-                    navController = navController
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
+        if (genresListState.genresList.isNotEmpty()) {
+            GenresHorizonalList(genresListState.genresList)
+            LaunchedEffect(Unit) {
+                movieViewModel.getMovieListByGenres(
+                    type = "movie",
+                    genresId = genresListState.genresList.first().id.toString(),
+                    page = 1
                 )
             }
         }
-
+        if (movieListByGenresState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                movieList = movieListByGenresState.movieList,
+                navController = navController
+            )
+        }
+        if (movieListByPopularState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                movieList = movieListByPopularState.movieList,
+                isShowTitle = true,
+                title = stringResource(R.string.popular),
+                navController = navController
+            )
+        }
+        if (movieListByTopRatedState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                movieList = movieListByTopRatedState.movieList,
+                isShowTitle = true,
+                title = stringResource(R.string.top_rated),
+                navController = navController
+            )
+        }
+        if (movieListByUpcomingState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                movieList = movieListByUpcomingState.movieList,
+                isShowTitle = true,
+                title = stringResource(R.string.upcoming),
+                navController = navController
+            )
+        }
+        if (movieListByNowPlayingState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                modifier = Modifier.padding(bottom = 16.dp),
+                movieList = movieListByNowPlayingState.movieList,
+                isShowTitle = true,
+                title = stringResource(R.string.now_playing),
+                navController = navController
+            )
+        }
+    }
 }
