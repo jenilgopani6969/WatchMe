@@ -6,5 +6,6 @@ data class MovieListByCategoryState(
     val isLoading: Boolean = false,
     val errorMessage: String = "",
     val movieList: List<MovieList> = emptyList(),
-    val lastUpdated: Long = 0L
+    val lastUpdated: Long = 0L,
+    val currentPage: Int = 1
 )

@@ -26,20 +26,16 @@ fun MovieListScreen(
             type = "movie"
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.POPULAR_API,
-            page = 1
+            category = Constant.POPULAR_API
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.NOW_PLAYING_API,
-            page = 1
+            category = Constant.NOW_PLAYING_API
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.UPCOMING_API,
-            page = 1
+            category = Constant.UPCOMING_API
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.TOP_RATED_API,
-            page = 1
+            category = Constant.TOP_RATED_API
         )
     }
 
@@ -57,7 +53,8 @@ fun MovieListScreen(
         if (genresListState.genresList.isNotEmpty()) {
             GenresHorizonalList(
                 type = Constant.GENRE,
-                categoryList = genresListState.genresList
+                categoryList = genresListState.genresList,
+                onCategorySelected = {}
             )
             LaunchedEffect(Unit) {
                 movieViewModel.getMovieListByGenres(

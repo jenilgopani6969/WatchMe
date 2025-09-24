@@ -25,6 +25,7 @@ fun GenresHorizonalList(
     type: String,
     selectedCategory: String = "",
     categoryList: List<Genres>,
+    onCategorySelected: (Genres) -> Unit
 ) {
     val viewModel: MovieViewModel = hiltViewModel()
     var selectedGenreId by remember {
@@ -48,6 +49,7 @@ fun GenresHorizonalList(
                 isSelected = isSelected,
                 onClick = {
                     selectedGenreId = item.id
+                    onCategorySelected(item)
                     when(type) {
                         Constant.GENRE -> {
                             viewModel.getMovieListByGenres(
@@ -58,8 +60,7 @@ fun GenresHorizonalList(
                         }
                         Constant.CATEGORY -> {
                             viewModel.getMovieListByCategory(
-                                category = item.name.categoryTitleToApiName(),
-                                page = 1
+                                category = item.name.categoryTitleToApiName()
                             )
                         }
                     }

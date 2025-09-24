@@ -13,7 +13,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,11 +41,12 @@ fun SeeAllMovieListScreen(
     val lazyGridState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
 
+    var selectedCategory by remember { mutableStateOf(category) }
+
     LaunchedEffect(Unit) {
-        category?.let {
+        selectedCategory?.let {
             movieViewModel.getMovieListByCategory(
-                category = it.categoryTitleToApiName(),
-                page = 1
+                category = it.categoryTitleToApiName()
             )
         }
     }
@@ -62,8 +67,14 @@ fun SeeAllMovieListScreen(
         )
         GenresHorizonalList(
             type = Constant.CATEGORY,
-            selectedCategory = category.toString(),
-            categoryList = categoryList
+            selectedCategory = selectedCategory.toString(),
+            categoryList = categoryList,
+            onCategorySelected = {
+                selectedCategory = it.name
+                coroutineScope.launch {
+                    lazyGridState.scrollToItem(0)
+                }
+            }
         )
         latestState?.movieList?.let {
             if (it.isNotEmpty()) {
@@ -74,12 +85,6 @@ fun SeeAllMovieListScreen(
 
                 // calculate how many columns can fit
                 val columns = (screenWidth / itemMinWidth).toInt().coerceAtLeast(2)
-
-                if (it.size <= 20 && !latestState.isLoading) {
-                    coroutineScope.launch {
-                        lazyGridState.animateScrollToItem(0)
-                    }
-                }
 
                 LazyVerticalGrid(
                     modifier = Modifier
@@ -96,6 +101,18 @@ fun SeeAllMovieListScreen(
                             movieDetails = item,
                         ) {
                             navController.navigate(route = Screen.MovieDetails.route + "?movieId=${item.id}")
+                        }
+
+                        // Load next page when reaching bottom
+                        if (index == latestState.movieList.lastIndex && !latestState.isLoading) {
+                            LaunchedEffect(Unit) {
+                                selectedCategory?.let { selectedCategory ->
+                                    movieViewModel.getMovieListByCategory(
+                                        category = selectedCategory.categoryTitleToApiName(),
+                                        isResetPage = false
+                                    )
+                                }
+                            }
                         }
                     }
                 }

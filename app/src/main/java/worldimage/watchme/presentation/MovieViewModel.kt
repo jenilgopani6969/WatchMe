@@ -51,23 +51,24 @@ class MovieViewModel @Inject constructor(
 
     fun getMovieListByCategory(
         category: String,
-        page: Int
+        isResetPage: Boolean = true
     ) {
+        // map category to its state flow
+        val stateFlow = when (category) {
+            Constant.POPULAR_API -> _movieListByPopularState
+            Constant.UPCOMING_API -> _movieListByUpcomingState
+            Constant.NOW_PLAYING_API -> _movieListByNowPlayingState
+            Constant.TOP_RATED_API -> _movieListByTopRatedState
+            else -> null
+        }
+
         viewModelScope.launch {
+            val currentPage = stateFlow?.value?.currentPage
+            val page = if (isResetPage) 1 else currentPage?.plus(1)
             movieRepository.getMoviesByCategory(
                 category = category,
-                page = page
+                page = page ?: 1
             ).collectLatest { resource ->
-
-                // map category to its state flow
-                val stateFlow = when (category) {
-                    Constant.POPULAR_API -> _movieListByPopularState
-                    Constant.UPCOMING_API -> _movieListByUpcomingState
-                    Constant.NOW_PLAYING_API -> _movieListByNowPlayingState
-                    Constant.TOP_RATED_API -> _movieListByTopRatedState
-                    else -> null
-                }
-
                 stateFlow?.let {
                     when (resource) {
                         is Resource.Loading -> {
@@ -76,7 +77,11 @@ class MovieViewModel @Inject constructor(
 
                         is Resource.Success -> {
                             resource.data?.let { movieList ->
-                                stateFlow.update { it.copy(movieList = movieList, lastUpdated = System.currentTimeMillis()) }
+                                stateFlow.update { it.copy(
+                                    movieList = if (isResetPage) movieList else it.movieList + movieList,
+                                    lastUpdated = System.currentTimeMillis(),
+                                    currentPage = page ?: 1)
+                                }
                             }
                         }
 
