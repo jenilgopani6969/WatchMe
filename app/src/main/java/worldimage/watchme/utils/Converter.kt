@@ -1,5 +1,8 @@
 package worldimage.watchme.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import worldimage.watchme.R
 import worldimage.watchme.data.remote.dto.CastItemDto
 import worldimage.watchme.data.remote.dto.Genre
 import worldimage.watchme.data.remote.dto.MovieDetailsDto
@@ -53,6 +56,16 @@ fun String.toYear(): String {
 
 fun String.toFirstAndLastName(): List<String> {
     return this.trim().split(" ")
+}
+
+fun String.categoryTitleToApiName(): String {
+    return when(this) {
+        Constant.POPULAR -> Constant.POPULAR_API
+        Constant.TOP_RATED -> Constant.TOP_RATED_API
+        Constant.UPCOMING -> Constant.UPCOMING_API
+        Constant.NOW_PLAYING -> Constant.NOW_PLAYING_API
+        else -> this
+    }
 }
 
 fun Int.toHourAndMinute(): String {

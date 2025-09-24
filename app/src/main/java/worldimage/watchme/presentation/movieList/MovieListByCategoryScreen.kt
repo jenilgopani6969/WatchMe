@@ -8,24 +8,30 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
+import worldimage.watchme.R
 import worldimage.watchme.domain.model.MovieList
 import worldimage.watchme.navigation.Screen
-import worldimage.watchme.presentation.MovieViewModel
 import worldimage.watchme.presentation.components.MovieBanner
+import worldimage.watchme.utils.Constant
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "ConfigurationScreenWidthHeight")
 @Composable
 fun MovieListByCategoryScreen(
     modifier: Modifier = Modifier,
@@ -34,9 +40,10 @@ fun MovieListByCategoryScreen(
     title: String = "",
     isSellAllVisible: Boolean = true,
     navController: NavController,
-    isPopBackStack: Boolean = false
+    isPopBackStack: Boolean = false,
 ) {
-    val viewModel: MovieViewModel = hiltViewModel()
+    val lazyListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     Column {
         if (isShowTitle) {
@@ -58,7 +65,7 @@ fun MovieListByCategoryScreen(
                         modifier = Modifier
                             .padding(4.dp)
                             .clickable(true, onClick = {
-                                println("On Click called!")
+                                navController.navigate(route = Screen.SeeAllMovieList.route + "?category=${title}")
                             }),
                         text = "See all",
                         color = Color.White.copy(alpha = 0.5f),
@@ -69,16 +76,23 @@ fun MovieListByCategoryScreen(
                     )
                 }
             }
+        } else {
+            coroutineScope.launch {
+                lazyListState.animateScrollToItem(0)
+            }
         }
+
         LazyRow(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
             contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            state = lazyListState
         ) {
             items(movieList) { item ->
                 MovieBanner(
+                    modifier = Modifier.width(132.dp),
                     movieDetails = item,
                 ) {
                     if (isPopBackStack) {
@@ -89,52 +103,4 @@ fun MovieListByCategoryScreen(
             }
         }
     }
-
 }
-//
-//@Preview()
-//@Composable
-//private fun PrevMovieBannerList() {
-//    val movieList = listOf(
-//        MovieDetails(
-//            backdrop_path = "/eU7IfdWq8KQy0oNd4kKXS0QUR08.jpg",
-//            id = 1061474,
-//            original_language = "en",
-//            original_title = "Superman",
-//            overview = "Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent.",
-//            popularity = 568.5633,
-//            poster_path = "/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-//            release_date = "2025-07-09",
-//            title = "Superman",
-//            vote_average = 7.555,
-//            vote_count = 2648
-//        ),
-//        MovieDetails(
-//            backdrop_path = "/eU7IfdWq8KQy0oNd4kKXS0QUR08.jpg",
-//            id = 1061474,
-//            original_language = "en",
-//            original_title = "Superman",
-//            overview = "Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent.",
-//            popularity = 568.5633,
-//            poster_path = "/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-//            release_date = "2025-07-09",
-//            title = "Superman",
-//            vote_average = 7.555,
-//            vote_count = 2648
-//        ),
-//        MovieDetails(
-//            backdrop_path = "/eU7IfdWq8KQy0oNd4kKXS0QUR08.jpg",
-//            id = 1061474,
-//            original_language = "en",
-//            original_title = "Superman",
-//            overview = "Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent.",
-//            popularity = 568.5633,
-//            poster_path = "/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-//            release_date = "2025-07-09",
-//            title = "Superman",
-//            vote_average = 7.555,
-//            vote_count = 2648
-//        )
-//    )
-//    MovieListByCategoryScreen(movieList = movieList, isShowTitle = true, title = "Top Rated Movies")
-//}

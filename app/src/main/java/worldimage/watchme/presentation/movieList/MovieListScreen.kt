@@ -19,26 +19,26 @@ import worldimage.watchme.utils.Constant
 @Composable
 fun MovieListScreen(
     navController: NavController,
+    movieViewModel: MovieViewModel
 ) {
-    val movieViewModel = hiltViewModel<MovieViewModel>()
     LaunchedEffect(Unit) {
         movieViewModel.getCategoryList(
             type = "movie"
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.POPULAR,
+            category = Constant.POPULAR_API,
             page = 1
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.NOW_PLAYING,
+            category = Constant.NOW_PLAYING_API,
             page = 1
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.UPCOMING,
+            category = Constant.UPCOMING_API,
             page = 1
         )
         movieViewModel.getMovieListByCategory(
-            category = Constant.TOP_RATED,
+            category = Constant.TOP_RATED_API,
             page = 1
         )
     }
@@ -55,7 +55,10 @@ fun MovieListScreen(
             .verticalScroll(rememberScrollState())
     ) {
         if (genresListState.genresList.isNotEmpty()) {
-            GenresHorizonalList(genresListState.genresList)
+            GenresHorizonalList(
+                type = Constant.GENRE,
+                categoryList = genresListState.genresList
+            )
             LaunchedEffect(Unit) {
                 movieViewModel.getMovieListByGenres(
                     type = "movie",
@@ -70,19 +73,19 @@ fun MovieListScreen(
                 navController = navController
             )
         }
+        if (movieListByNowPlayingState.movieList.isNotEmpty()) {
+            MovieListByCategoryScreen(
+                movieList = movieListByNowPlayingState.movieList,
+                isShowTitle = true,
+                title = Constant.NOW_PLAYING,
+                navController = navController
+            )
+        }
         if (movieListByPopularState.movieList.isNotEmpty()) {
             MovieListByCategoryScreen(
                 movieList = movieListByPopularState.movieList,
                 isShowTitle = true,
-                title = stringResource(R.string.popular),
-                navController = navController
-            )
-        }
-        if (movieListByTopRatedState.movieList.isNotEmpty()) {
-            MovieListByCategoryScreen(
-                movieList = movieListByTopRatedState.movieList,
-                isShowTitle = true,
-                title = stringResource(R.string.top_rated),
+                title = Constant.POPULAR,
                 navController = navController
             )
         }
@@ -90,16 +93,16 @@ fun MovieListScreen(
             MovieListByCategoryScreen(
                 movieList = movieListByUpcomingState.movieList,
                 isShowTitle = true,
-                title = stringResource(R.string.upcoming),
+                title = Constant.UPCOMING,
                 navController = navController
             )
         }
-        if (movieListByNowPlayingState.movieList.isNotEmpty()) {
+        if (movieListByTopRatedState.movieList.isNotEmpty()) {
             MovieListByCategoryScreen(
                 modifier = Modifier.padding(bottom = 16.dp),
-                movieList = movieListByNowPlayingState.movieList,
+                movieList = movieListByTopRatedState.movieList,
                 isShowTitle = true,
-                title = stringResource(R.string.now_playing),
+                title = Constant.TOP_RATED,
                 navController = navController
             )
         }

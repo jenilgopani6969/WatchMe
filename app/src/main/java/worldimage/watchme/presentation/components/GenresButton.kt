@@ -17,10 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import worldimage.watchme.ui.theme.CategoryBackground
+import worldimage.watchme.ui.theme.GenreBackground
+import worldimage.watchme.ui.theme.GenreBackgroundSelected
 
 @Composable
 fun GenresButton(
     text: String,
+    isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
@@ -28,7 +31,7 @@ fun GenresButton(
             .height(36.dp)
             .wrapContentWidth()
             .clip(RoundedCornerShape(32.dp))
-            .background(CategoryBackground)
+            .background(if (isSelected) GenreBackgroundSelected else GenreBackground)
             .clickable {
                 onClick()
             },
@@ -47,5 +50,5 @@ fun GenresButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCustomButton() {
-    GenresButton(text = "Popular", onClick = {})
+    GenresButton(text = "Popular", isSelected = false,  onClick = {})
 }

@@ -61,10 +61,10 @@ class MovieViewModel @Inject constructor(
 
                 // map category to its state flow
                 val stateFlow = when (category) {
-                    Constant.POPULAR -> _movieListByPopularState
-                    Constant.UPCOMING -> _movieListByUpcomingState
-                    Constant.NOW_PLAYING -> _movieListByNowPlayingState
-                    Constant.TOP_RATED -> _movieListByTopRatedState
+                    Constant.POPULAR_API -> _movieListByPopularState
+                    Constant.UPCOMING_API -> _movieListByUpcomingState
+                    Constant.NOW_PLAYING_API -> _movieListByNowPlayingState
+                    Constant.TOP_RATED_API -> _movieListByTopRatedState
                     else -> null
                 }
 
@@ -76,7 +76,7 @@ class MovieViewModel @Inject constructor(
 
                         is Resource.Success -> {
                             resource.data?.let { movieList ->
-                                stateFlow.update { it.copy(movieList = movieList) }
+                                stateFlow.update { it.copy(movieList = movieList, lastUpdated = System.currentTimeMillis()) }
                             }
                         }
 

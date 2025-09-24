@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -27,13 +28,14 @@ import worldimage.watchme.presentation.components.ExpandableStory
 import worldimage.watchme.presentation.components.MovieDetailsImageOverlayText
 import worldimage.watchme.presentation.movieList.MovieListByCategoryScreen
 import worldimage.watchme.ui.theme.MovieBannerTextBackground
+import worldimage.watchme.utils.Constant
 
 @Composable
 fun MovieDetailScreen(
     navController: NavController,
+    movieViewModel: MovieViewModel,
     movieId: String?
 ) {
-    val movieViewModel = hiltViewModel<MovieViewModel>()
     LaunchedEffect(Unit) {
         movieId?.let { movieViewModel.getMovieDetails(it) }
         movieId?.let { movieViewModel.getRecommendedMovie(it) }
@@ -73,16 +75,15 @@ fun MovieDetailScreen(
 
         if (recommendedMovieState.movieList.isNotEmpty()) {
             MovieListByCategoryScreen(
+                modifier = Modifier.padding(bottom = 16.dp),
                 movieList = recommendedMovieState.movieList,
                 isShowTitle = true,
-                title = stringResource(R.string.recommended_movies),
+                title = Constant.RECOMMENDED_MOVIES,
                 isSellAllVisible = false,
                 navController = navController,
                 isPopBackStack = true
             )
         }
-
-
     }
 }
 

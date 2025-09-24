@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val CategoryBackground  = Color(0xFF1E1D25)
 val MovieBannerTextBackground  = Color(0xFF1E1D25)
+val GenreBackground  = Color(0xFF1E1D25)
+val GenreBackgroundSelected  = Color(0xFF2E2E34)
+val ImdbColor  = Color(0xFFFFC106)
